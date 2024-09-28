@@ -10,7 +10,7 @@ import debounce from 'lodash/debounce'
 
 const LeftSidebar = () => {
     const navigate = useNavigate();
-    const { 
+const { 
         userData, 
         chatData, 
         setChatData,
@@ -26,12 +26,11 @@ const LeftSidebar = () => {
     const [searchInput, setSearchInput] = useState('');
     const [filteredChatData, setFilteredChatData] = useState([]);
 
-    const setChat = useCallback(debounce(async (item) => {
+    const setChat = useCallback(async (item) => {
         try {
             if (item?.messageId && userData?.id) {
                 setMessagesId(item.messageId);
                 setChatUser(item);
-                setMessages([]); 
                 const userChatsRef = doc(db, 'chats', userData.id);
                 const userChatsSnapshot = await getDoc(userChatsRef);
                 const userChatsData = userChatsSnapshot.data();
@@ -44,16 +43,23 @@ const LeftSidebar = () => {
                         })
                     }
                 }
+                
+                // Load and reverse messages
+                const messagesRef = doc(db, 'messages', item.messageId);
+                const messagesSnapshot = await getDoc(messagesRef);
+                const messagesData = messagesSnapshot.data();
+                if (messagesData && messagesData.messages) {
+                    setMessages(messagesData.messages.reverse());
+                }
+                
                 setChatVisible(true);
-                setSearchInput('');
-                setFilteredChatData(chatData);
             } else {
                 toast.error("Invalid chat data");
             }
         } catch (error) {
             toast.error(error.message);
         }
-    }, 300), [userData, setMessagesId, setChatUser, setChatVisible, chatData, setMessages]);
+    }, [userData, setMessagesId, setChatUser, setMessages, setChatVisible]);
 
     const addChat = useCallback(async () => {
         if (!searchResult || !userData?.id) return;
@@ -98,7 +104,6 @@ const LeftSidebar = () => {
                 })
             })
 
-            // Immediately update local state
             setChatData(prevChatData => {
                 const newData = [...prevChatData, newChatData];
                 return newData.sort((a, b) => b.updatedAt - a.updatedAt);

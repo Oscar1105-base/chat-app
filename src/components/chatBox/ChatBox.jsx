@@ -90,19 +90,18 @@ const ChatBox = () => {
     return `${hour % 12 || 12}:${minute} ${hour >= 12 ? 'PM' : 'AM'}`;
   }, []);
 
-  useEffect(() => {
+useEffect(() => {
     let unSub;
-    if (messagesId && userData) { // Only subscribe if user is logged in (userData exists)
-      unSub = onSnapshot(doc(db, 'messages', messagesId), (res) => {
-        setMessages(res.data().messages.reverse());
-      });
-    } else {
-      setMessages([]); // Clear messages when logged out or no messagesId
+    if (messagesId) {
+        unSub = onSnapshot(doc(db, 'messages', messagesId), (res) => {
+            const updatedMessages = res.data().messages;
+            setMessages(updatedMessages.reverse());
+        });
     }
     return () => {
-      if (unSub) unSub();
+        if (unSub) unSub();
     };
-  }, [messagesId, setMessages, userData]);
+}, [messagesId, setMessages]);
 
 
  useEffect(() => {
@@ -154,7 +153,7 @@ if (!userData || !chatUser) {
           value={input} 
           type="text" 
           placeholder='Send a message' 
-          onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+          onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
         />
         <input onChange={sendImage} type="file" id='image' accept='image/png, image/jpeg' hidden />
         <label htmlFor="image">

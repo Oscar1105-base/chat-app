@@ -15,7 +15,7 @@ const RightSidebar = () => {
         loadUserData,
         setMessages,
         setChatUser,
-        setUserData 
+        setUserData
     } = useContext(AppContext);
     const [msgImages, setMsgImages] = useState([]);
 
@@ -52,7 +52,7 @@ const RightSidebar = () => {
             await logout();
             setMessages([]);
             setChatUser(null);
-            setUserData(null); 
+            setUserData(null); // Clear user data on logout
         } catch (error) {
             toast.error("Logout failed: " + error.message);
         }

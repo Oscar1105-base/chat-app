@@ -14,19 +14,18 @@
 
 React 環境
 ```
-    npm create vite@latest 
+npm create vite@latest 
 ```
 > 先選擇React，再選JavaScript
 
 Node JS 環境
 ```
-    npm install
+npm install
 ```
 
-React套件 + Firebase 
-react-router-dom , react-toastify , firebase
+React Router + Toastify + Firebase
 ```
-    npm install react-router-dom react-toastify firebase
+npm install react-router-dom react-toastify firebase
 ```
 
 開啟本地伺服器

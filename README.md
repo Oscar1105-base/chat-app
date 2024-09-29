@@ -8,3 +8,18 @@
 
 > 2024/09/29 bata 1.0 edit
 
+## 事前導覽
+
+### 請先用npm安裝以下套件
+- 後端 Node.JS
+```
+    npm install
+```
+- 前端 React + firebase 連接 
+```
+    npm install react-router-dom react-toastify firebase
+```
+- 開啟本地伺服器
+```
+    npm run dev
+```

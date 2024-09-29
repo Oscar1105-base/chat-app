@@ -58,6 +58,12 @@ const AppContextProvider = (props) => {
             const chatRef = doc(db, 'chats', userData.id);
             const unsub = onSnapshot(chatRef, async (res) => {
                 const chatItems = res.data()?.chatsData || [];
+
+                if (chatItems.length === 0) {
+                    // If there are no chats, set an empty array and return
+                    setChatData([]);
+                    return;
+                }
                 
                 // 獲取唯一用戶 ID
                 const uniqueUserIds = [...new Set(chatItems.map(item => item.rId))];

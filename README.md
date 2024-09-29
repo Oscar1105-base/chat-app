@@ -22,13 +22,22 @@ Node JS 環境
 ```
 npm install
 ```
+========
 
-React Router + Toastify + Firebase
+React Router + Toastify  
+```
+npm install react-router-dom react-toastify firebase
+```
+========
+
+Firebase
 ```
 npm install react-router-dom react-toastify firebase
 ```
 
+========
+
 開啟本地伺服器
 ```
-    npm run dev
+npm run dev
 ```

@@ -6,7 +6,6 @@ import { arrayUnion, collection, doc, getDoc, getDocs, query, serverTimestamp, s
 import { db } from '../../config/firebase'
 import { AppContext } from '../../context/AppContext'
 import { toast } from 'react-toastify'
-import debounce from 'lodash/debounce'
 
 const LeftSidebar = () => {
     const navigate = useNavigate();
@@ -67,15 +66,26 @@ const {
         const messagesRef = collection(db, "messages");
         const chatsRef = collection(db, "chats");
         try {
+            // 检查是否已存在与该用户的对话
+            const existingChat = chatData.find(chat => chat.rId === searchResult.id);
+            if (existingChat) {
+                setChat(existingChat);
+                setSearchInput('');
+                setFilteredChatData(chatData);
+                setChatVisible(true);
+                return;
+            }
+
             const newMessageRef = doc(messagesRef);
+            const newMessageId = newMessageRef.id;
 
             await setDoc(newMessageRef, {
-                createAt: serverTimestamp(),
+                createdAt: serverTimestamp(),
                 messages: []
-            })
+            });
 
             const newChatData = {
-                messageId: newMessageRef.id,
+                messageId: newMessageId,
                 lastMessage: "",
                 rId: searchResult.id,
                 updateAt: Date.now(),
@@ -86,13 +96,15 @@ const {
                 }
             };
 
+            // 更新当前用户的 chats
             await updateDoc(doc(chatsRef, userData.id), {
                 chatsData: arrayUnion(newChatData)
-            })
+            });
 
+            // 更新对方用户的 chats
             await updateDoc(doc(chatsRef, searchResult.id), {
                 chatsData: arrayUnion({
-                    messageId: newMessageRef.id,
+                    messageId: newMessageId,
                     lastMessage: "",
                     rId: userData.id,
                     updateAt: Date.now(),
@@ -102,22 +114,18 @@ const {
                         avatar: userData.avatar
                     }
                 })
-            })
-
-            setChatData(prevChatData => {
-                const newData = [...prevChatData, newChatData];
-                return newData.sort((a, b) => b.updatedAt - a.updatedAt);
             });
 
+            // 不再直接更新本地状态，让 onSnapshot 监听器处理
             setChat(newChatData);
             setSearchInput('');
-            setFilteredChatData(chatData);
             setChatVisible(true);
+            setSearchResult(null);
         } catch (error) {
             toast.error(error.message);
             console.error(error);
         }
-    }, [searchResult, userData, setChat, setChatVisible, chatData, setChatData]);
+    }, [searchResult, userData, setChat, setChatVisible, chatData]);
 
     const inputHandler = useCallback(async (e) => {
         const input = e.target.value.toLowerCase();

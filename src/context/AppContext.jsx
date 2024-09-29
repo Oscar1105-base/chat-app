@@ -79,12 +79,18 @@ const AppContextProvider = (props) => {
                 });
                 
                 // 合併聊天項目和用戶數據
-                const tempData = chatItems.map(item => ({
-                    ...item,
-                    userData: userDataMap[item.rId] || {}
-                }));
+                const tempData = chatItems.reduce((acc, item) => {
+                    const existingIndex = acc.findIndex(chat => chat.messageId === item.messageId);
+                    if (existingIndex === -1) {
+                        acc.push({
+                            ...item,
+                            userData: userDataMap[item.rId] || {}
+                        });
+                    }
+                    return acc;
+                }, []);
                 
-                setChatData(tempData.sort((a, b) => b.updatedAt - a.updatedAt));
+                setChatData(tempData.sort((a, b) => b.updateAt - a.updateAt));
             });
             
             return () => unsub();

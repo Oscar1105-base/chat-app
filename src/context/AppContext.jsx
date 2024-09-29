@@ -14,7 +14,7 @@ const AppContextProvider = (props) => {
     const [chatUser, setChatUser] = useState(null);
     const [chatVisible, setChatVisible] = useState(false);
 
-    // 使用 useMemo 來緩存 userRef
+    // 使用 useMemo 緩存 userRef
     const userRef = useMemo(() => {
         return userData ? doc(db, 'users', userData.id) : null;
     }, [userData]);
@@ -34,7 +34,7 @@ const AppContextProvider = (props) => {
             
             await updateDoc(userRef, { lastSeen: Date.now() });
             
-            // 使用 RAF 替代 setInterval 來更新 lastSeen
+            // 使用 RAF 替代 setInterval 固定 60s 更新 lastSeen
             let rafId;
             const updateLastSeen = async () => {
                 if (auth.currentUser) {
@@ -60,7 +60,7 @@ const AppContextProvider = (props) => {
                 const chatItems = res.data()?.chatsData || [];
 
                 if (chatItems.length === 0) {
-                    // If there are no chats, set an empty array and return
+                    // 新用戶沒有任何對話，需要等資料匯入後才檢查
                     setChatData([]);
                     return;
                 }
@@ -91,7 +91,7 @@ const AppContextProvider = (props) => {
         }
     }, [userData]);
 
-    // 新增：延遲加載消息
+    // 延遲加載消息
     const loadMessages = useCallback(async (messageId) => {
         if (!messageId) return;
         
@@ -110,7 +110,7 @@ const AppContextProvider = (props) => {
         messagesId, setMessagesId,
         chatUser, setChatUser,
         chatVisible, setChatVisible,
-        loadMessages // 新增：暴露 loadMessages 函數
+        loadMessages 
     };
 
     return (

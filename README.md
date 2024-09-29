@@ -8,15 +8,22 @@
 
 > 2024/09/29 bata 1.0 edit
 
-## 事前導覽
+## 環境建置
 
 ### 請先用npm安裝以下套件
-後端 Node.JS
+
+React 環境
+```
+    npm create vite@latest 
+```
+> 先選擇React，再選JavaScript
+
+Node JS 環境
 ```
     npm install
 ```
 
-前端 React + Firebase 
+React套件 + Firebase 
 react-router-dom , react-toastify , firebase
 ```
     npm install react-router-dom react-toastify firebase

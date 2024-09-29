@@ -1,7 +1,9 @@
 import { doc, getDoc, onSnapshot, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { createContext, useEffect, useState, useCallback, useMemo } from "react";
-import { auth, db } from "../config/firebase";
+import { logout,auth, db } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify'
+
 
 export const AppContext = createContext();
 
@@ -25,15 +27,15 @@ const AppContextProvider = (props) => {
             const userSnap = await getDoc(userRef);
             const userData = userSnap.data();
             setUserData(userData);
-            
+
             if (userData.avatar && userData.name) {
                 navigate('/chat');
             } else {
                 navigate('/profile');
             }
-            
+
             await updateDoc(userRef, { lastSeen: Date.now() });
-            
+
             // 使用 RAF 替代 setInterval 固定 60s 更新 lastSeen
             let rafId;
             const updateLastSeen = async () => {
@@ -64,20 +66,20 @@ const AppContextProvider = (props) => {
                     setChatData([]);
                     return;
                 }
-                
+
                 // 獲取唯一用戶 ID
                 const uniqueUserIds = [...new Set(chatItems.map(item => item.rId))];
-                
+
                 // 批量獲取用戶數據
                 const usersQuery = query(collection(db, 'users'), where('__name__', 'in', uniqueUserIds));
                 const usersSnapshot = await getDocs(usersQuery);
-                
+
                 // 創建用戶數據映射
                 const userDataMap = {};
                 usersSnapshot.forEach(doc => {
                     userDataMap[doc.id] = doc.data();
                 });
-                
+
                 // 合併聊天項目和用戶數據
                 const tempData = chatItems.reduce((acc, item) => {
                     const existingIndex = acc.findIndex(chat => chat.messageId === item.messageId);
@@ -89,10 +91,10 @@ const AppContextProvider = (props) => {
                     }
                     return acc;
                 }, []);
-                
+
                 setChatData(tempData.sort((a, b) => b.updateAt - a.updateAt));
             });
-            
+
             return () => unsub();
         }
     }, [userData]);
@@ -100,13 +102,30 @@ const AppContextProvider = (props) => {
     // 延遲加載消息
     const loadMessages = useCallback(async (messageId) => {
         if (!messageId) return;
-        
+
         const messagesRef = doc(db, 'messages', messageId);
         const messagesSnap = await getDoc(messagesRef);
         const messagesData = messagesSnap.data()?.messages || [];
-        
+
         setMessages(messagesData.reverse());
     }, []);
+
+    // 登出
+    const handleLogout = useCallback(async () => {
+        try {
+            await logout();
+            setMessages([]);
+            setChatUser(null);
+            setUserData(null);
+            setChatData([]);
+            setMessagesId(null);
+            setChatVisible(false);
+            toast.success("Logged out successfully");
+        } catch (error) {
+            toast.error("Logout failed: " + error.message);
+        }
+    }, [navigate]);
+
 
     const value = {
         userData, setUserData,
@@ -116,7 +135,8 @@ const AppContextProvider = (props) => {
         messagesId, setMessagesId,
         chatUser, setChatUser,
         chatVisible, setChatVisible,
-        loadMessages 
+        loadMessages,
+        handleLogout
     };
 
     return (
@@ -124,6 +144,8 @@ const AppContextProvider = (props) => {
             {props.children}
         </AppContext.Provider>
     );
+    // return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+
 };
 
 export default AppContextProvider;

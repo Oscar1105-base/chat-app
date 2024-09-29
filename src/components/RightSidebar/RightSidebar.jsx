@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState ,useCallback} from 'react'
 import './RightSidebar.css'
 import assets from '../../assets/assets'
-import { logout, auth } from '../../config/firebase'
+import { auth } from '../../config/firebase'
 import { AppContext } from '../../context/AppContext'
 import { toast } from 'react-toastify'
 
@@ -13,9 +13,9 @@ const RightSidebar = () => {
         messages,
         userData,
         loadUserData,
-        setMessages,
-        setChatUser,
-        setUserData 
+        setUserData,
+        handleLogout
+
     } = useContext(AppContext);
     const [msgImages, setMsgImages] = useState([]);
 
@@ -47,16 +47,6 @@ const RightSidebar = () => {
         setMsgImages(tempVar);
     }, [messages])
 
-    const handleLogout = useCallback(async () => {
-        try {
-            await logout();
-            setMessages([]);
-            setChatUser(null);
-            setUserData(null); 
-        } catch (error) {
-            toast.error("Logout failed: " + error.message);
-        }
-    }, [setMessages, setChatUser, setUserData]);
 
     const renderUserInfo = useCallback((user) => (
         <div className="rs-profile">

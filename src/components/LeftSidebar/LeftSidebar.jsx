@@ -12,13 +12,13 @@ const LeftSidebar = () => {
 const { 
         userData, 
         chatData, 
-        setChatData,
         setChatUser, 
         setMessagesId, 
         messagesId, 
         chatVisible, 
         setChatVisible,
-        setMessages
+        setMessages,
+        handleLogout
     } = useContext(AppContext);
 
     const [searchResult, setSearchResult] = useState(null);
@@ -184,7 +184,7 @@ const {
                         <div className="sub-menu">
                             <p onClick={() => navigate('/profile')}>Edit Profile</p>
                             <hr />
-                            <p>Logout</p>
+                            <p onClick={handleLogout}>Logout</p>
                         </div>
                     </div>
                 </div>

@@ -11,15 +11,18 @@
 ## 事前導覽
 
 ### 請先用npm安裝以下套件
-- 後端 Node.JS
+後端 Node.JS
 ```
     npm install
 ```
-- 前端 React + firebase 連接 
+
+前端 React + Firebase 
+react-router-dom , react-toastify , firebase
 ```
     npm install react-router-dom react-toastify firebase
 ```
-- 開啟本地伺服器
+
+開啟本地伺服器
 ```
     npm run dev
 ```

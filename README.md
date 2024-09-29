@@ -1,8 +1,12 @@
-# React + Vite
+# Chat app 即時聊天室
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React & Firebase 實作 websocket
 
-Currently, two official plugins are available:
+<div style="display: flex; justify-content: center; margin-bottom: 20px;">
+  <img src="/sample.jpg" alt="GitHub 簡介" style="width: 90%;">
+</div>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+> 2024/09/29 bata 1.0 edit
+
+
+## DEMO 展示

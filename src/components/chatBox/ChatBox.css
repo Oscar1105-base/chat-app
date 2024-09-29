@@ -90,6 +90,7 @@
 .r-msg {
     flex-direction: row-reverse;
     justify-content: start;
+
 }
 
 .msg {
@@ -105,7 +106,8 @@
 
 .r-msg .msg {
     border-radius: 8px 8px 8px 8px;
-
+    background: #FCC419;
+    color: black;
 }
 
 .r-msg img{

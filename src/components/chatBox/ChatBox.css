@@ -99,13 +99,13 @@
     max-width: 200px;
     font-size: 11px;
     font-weight: 300;
-    border-radius: 8px 8px 0px 8px;
+    border-radius: 8px 8px 8px 8px;
     margin-bottom: 30px;
 }
 
 .r-msg .msg {
-    border-radius: 8px 8px 8px 8px;
-
+    background-color: #FCC419;
+    color: black;
 }
 
 .r-msg img{

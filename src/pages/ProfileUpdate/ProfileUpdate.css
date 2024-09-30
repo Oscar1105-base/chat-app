@@ -1,6 +1,6 @@
 .profile {
     min-height: 100vh;
-    background: url(/background.png) no-repeat;
+    background: linear-gradient(#596AFF, #383699);
     background-size: cover;
     display: flex;
     align-items: center;

@@ -58,11 +58,11 @@ npm run dev
 > 首次註冊需輸入ID/信箱/密碼，進入後添加暱稱/簡介/頭像後完成
 
 <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-  <img src="/login.png" alt="登錄" style="width: 45%;">
+  <img src="/Demo/ChatLogin.png" alt="登錄" style="width: 45%;">
 </div>
 
 <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-  <img src="/profile.png" alt="個人簡介" style="width: 45%;">
+  <img src="/Demo/Profile.png" alt="個人簡介" style="width: 45%;">
 </div>
 
 暱稱/簡介可以繼承ID與預設字串，頭像無匿名功能
@@ -80,8 +80,10 @@ npm run dev
 > 右選單為，可以獲取該用戶最近上傳圖片
 
 
-
-
 ## 窄版或手機版面的登出在副選單三個點(⋮)那邊
 
+可上傳文/圖 ，支援 png , jpg , jpeg
+<div style="display: flex; justify-content: center; margin-bottom: 20px;">
+  <img src="/Demo/logout.png" alt="登出" style="width: 90%;">
+</div>
 

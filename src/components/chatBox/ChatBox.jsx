@@ -15,7 +15,8 @@ const ChatBox = () => {
     setMessages, 
     messagesId, 
     chatVisible, 
-    setChatVisible
+    setChatVisible,
+    toggleChatUser 
   } = useContext(AppContext);
   const [input, setInput] = useState("");
 
@@ -128,7 +129,7 @@ if (!userData || !chatUser) {
           {chatUser.userData.name}
           {Date.now() - chatUser.userData.lastSeen <= 70000 && <img className='dot' src={assets.green_dot} alt="" />}
         </p>
-        <img src={assets.help_icon} className='help' alt="" />
+        <img src={assets.help_icon} className='help' alt="" onClick={toggleChatUser} /> {/* 修改這行 */}
         <img onClick={() => setChatVisible(false)} src={assets.arrow_icon} className='arrow' alt="" />
       </div>
 

@@ -1,5 +1,5 @@
 import { doc, getDoc, onSnapshot, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
-import { createContext, useEffect, useState, useCallback, useMemo } from "react";
+import { createContext, useEffect, useState, useCallback } from "react";
 import { logout, auth, db } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify'
@@ -36,7 +36,6 @@ const AppContextProvider = (props) => {
                 navigate('/profile');
                 return;
             } else {
-                toast.success("Create Success!");
                 navigate('/chat');
             }
 
@@ -133,6 +132,10 @@ const AppContextProvider = (props) => {
         }
     }, [navigate]);
 
+    // 新增一個函數來切換 chatUser
+    const toggleChatUser = useCallback(() => {
+        setChatUser(prev => prev ? null : { userData });
+    }, [userData]);
 
     const value = {
         userData, setUserData,
@@ -143,7 +146,8 @@ const AppContextProvider = (props) => {
         chatUser, setChatUser,
         chatVisible, setChatVisible,
         loadMessages,
-        handleLogout
+        handleLogout,
+        toggleChatUser
     };
 
     return (
@@ -151,7 +155,6 @@ const AppContextProvider = (props) => {
             {props.children}
         </AppContext.Provider>
     );
-    // return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 
 };
 

@@ -1,52 +1,58 @@
-import React, { useContext, useEffect, useState ,useCallback} from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
 import './RightSidebar.css'
 import assets from '../../assets/assets'
-import { auth } from '../../config/firebase'
+import { db } from '../../config/firebase'
 import { AppContext } from '../../context/AppContext'
 import { toast } from 'react-toastify'
-
+import { collection, query, where, getDocs } from 'firebase/firestore'
 
 const RightSidebar = () => {
-
     const {
         chatUser,
         messages,
         userData,
-        loadUserData,
-        setUserData,
-        handleLogout
-
+        handleLogout,
     } = useContext(AppContext);
     const [msgImages, setMsgImages] = useState([]);
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
-            if (user && !userData) {
-                loadUserData(user.uid);
-            } else if (!user) {
-                setUserData(null);
-            }
-        });
-
-        return () => unsubscribe();
-    }, [userData, loadUserData, setUserData]);
-
-    useEffect(() => {
-        let tempVar = [];
+    const fetchUserImages = useCallback(async (userId) => {
         try {
-            messages.forEach((msg) => {
-                if (msg.image) {
-                    tempVar.push(msg.image)
-                }
-            })
+            const messagesRef = collection(db, 'messages');
+            const q = query(messagesRef, where('participants', 'array-contains', userId));
+            const querySnapshot = await getDocs(q);
+
+            let images = [];
+            querySnapshot.forEach((doc) => {
+                const messagesData = doc.data().messages;
+                const userImages = messagesData
+                    .filter(msg => msg.sId === userId && msg.image)
+                    .map(msg => msg.image);
+                images = [...images, ...userImages];
+            });
+
+            setMsgImages(images);
         } catch (error) {
-            console.log(tempVar);
-            toast.error(error.message)
+            console.error("Error fetching user images:", error);
+            toast.error("無法載入圖片");
         }
+    }, []);
 
-        setMsgImages(tempVar);
-    }, [messages])
+    useEffect(() => {
+        if (chatUser) {
+            fetchUserImages(chatUser.userData.id);
+        } else if (userData) {
+            fetchUserImages(userData.id);
+        }
+    }, [chatUser, userData, fetchUserImages]);
 
+    useEffect(() => {
+        if (messages && messages.length > 0) {
+            const images = messages
+                .filter(msg => msg.image)
+                .map(msg => msg.image);
+            setMsgImages(images);
+        }
+    }, [messages]);
 
     const renderUserInfo = useCallback((user) => (
         <div className="rs-profile">
@@ -60,9 +66,8 @@ const RightSidebar = () => {
     ), []);
 
     if (!userData) {
-        return <div className="rs">Please log in to see profile information</div>;
+        return <div className="rs">Please Login account</div>;
     }
-
 
     return (
         <div className="rs">
@@ -71,7 +76,14 @@ const RightSidebar = () => {
             <div className="rs-media">
                 <p>Media</p>
                 <div>
-                    {msgImages.map((url, index) => (<img onClick={() => window.open(url)} key={index} src={url} alt='' />))}
+                    {msgImages.map((url, index) => (
+                        <img
+                            onClick={() => window.open(url)}
+                            key={index}
+                            src={url}
+                            alt=''
+                        />
+                    ))}
                 </div>
             </div>
             <button onClick={handleLogout}>Logout</button>

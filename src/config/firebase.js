@@ -4,13 +4,8 @@ import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDo0I-c2ymg0wHTOA2qWfnrsEqf46iR-7c",
-    authDomain: "chat-app-gt.firebaseapp.com",
-    projectId: "chat-app-gt",
-    storageBucket: "chat-app-gt.appspot.com",
-    messagingSenderId: "280311231801",
-    appId: "1:280311231801:web:ebdcaeb4d03699c39464e8"
+const firebaseConfig = {    
+    // your Firebase API
   };
   
 

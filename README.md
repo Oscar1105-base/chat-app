@@ -70,7 +70,7 @@ npm run dev
 ### 聊天室
 可上傳文/圖 ，支援 png , jpg , jpeg
 <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-  <img src="/sample.png" alt="聊天室" style="width: 40%;">
+  <img src="/sample.png" alt="聊天室" style="width: 90%;">
 </div>
 
 > 左選單為收尋功能與用戶列表及小選單(更新簡介)
@@ -84,6 +84,6 @@ npm run dev
 
 可上傳文/圖 ，支援 png , jpg , jpeg
 <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-  <img src="/Demo/logout.png" alt="登出" style="width: 90%;">
+  <img src="/Demo/logout.png" alt="登出" style="width: 40%;">
 </div>
 

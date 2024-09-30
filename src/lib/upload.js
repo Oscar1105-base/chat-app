@@ -1,5 +1,4 @@
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { resolvePath } from "react-router-dom";
 
 export const upload = async (file) => {
 

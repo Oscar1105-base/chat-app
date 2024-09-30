@@ -11,59 +11,70 @@ import { AppContext } from '../../context/AppContext';
 
 const ProfileUpdate = () => {
   const navigate = useNavigate();
-  const [image, setImage] = useState(false);
+  const [image, setImage] = useState(null);
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [uid, setUid] = useState("");
-  const [preImage, setpreImage] = useState("");
+  const [preImage, setPreImage] = useState("");
   const { setUserData } = useContext(AppContext);
 
-  const profileUpadate = async (event) => {
+  const profileUpdate = async (event) => {
     event.preventDefault();
     try {
-      if (!preImage && !image) {
-        toast.error("Upload profile picture");
+      if (!uid) {
+        toast.error("用戶未登入");
+        return;
       }
-      const docRef = doc(db, 'users', uid)
+
+      const docRef = doc(db, 'users', uid);
+      const updateData = {
+        bio: bio,
+        name: name
+      };
+
       if (image) {
-        const imgUrl = await upload(image);
-        setpreImage(imgUrl);
-        await updateDoc(docRef, {
-          avatar: imgUrl,
-          bio: bio,
-          name: name
-        })
+        try {
+          const imgUrl = await upload(image);
+          setPreImage(imgUrl);
+          updateData.avatar = imgUrl;
+        } catch (uploadError) {
+          console.error("圖片上傳失敗:", uploadError);
+          toast.error("圖片上傳失敗，請重試");
+          return;
+        }
       }
-      else {
-        await updateDoc(docRef, {
-          bio: bio,
-          name: name
-        })
-      }
+
+      await updateDoc(docRef, updateData);
       const snap = await getDoc(docRef);
-      setUserData(snap.data());
+      const updatedUserData = snap.data();
+      setUserData(updatedUserData);
+      toast.success("個人資料更新成功");
       navigate('/chat');
-    }
-    catch (error) {
-      console.error(error);
-      toast.error(error.message);
+    } catch (error) {
+      console.error("更新個人資料時出錯:", error);
+      toast.error("更新失敗，請重試");
     }
   }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setUid(user.uid)
-        const docRdf = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRdf)
-        if (docSnap.data().name) {
-          setName(docSnap.data().name);
-        }
-        if (docSnap.data().bio) {
-          setBio(docSnap.data().bio);
-        }
-        if (docSnap.data().avatar) {
-          setpreImage(docSnap.data().avatar);
+        setUid(user.uid);
+        try {
+          const docRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            setName(userData.name || userData.username || "");
+            setBio(userData.bio || "");
+            setPreImage(userData.avatar || "");
+          } else {
+            console.log("No such document!");
+            toast.error("無法獲取用戶資料");
+          }
+        } catch (error) {
+          console.error("獲取用戶資料時出錯:", error);
+          toast.error("載入用戶資料失敗");
         }
       } else {
         navigate('/');
@@ -76,18 +87,42 @@ const ProfileUpdate = () => {
   return (
     <div className='profile'>
       <div className="profile-container">
-        <form onSubmit={profileUpadate}>
-          <h3>Profile Details</h3>
+        <form onSubmit={profileUpdate}>
+          <h3>個人資料</h3>
           <label htmlFor="avatar">
-            <input onChange={(e) => setImage(e.target.files[0])} type="file" id='avatar' accept='.png, jpg , jpeg' hidden />
-            <img src={image ? URL.createObjectURL(image) : assets.avatar_icon} alt="" />
-            avatar
+            <input
+              onChange={(e) => setImage(e.target.files[0])}
+              type="file"
+              id='avatar'
+              accept='.png, .jpg, .jpeg'
+              hidden
+            />
+            <img
+              src={image ? URL.createObjectURL(image) : preImage || assets.avatar_icon}
+              alt="頭像"
+            />
+            更換頭像
           </label>
-          <input onChange={(e) => setName(e.target.value)} value={name} type="text" placeholder='name' required />
-          <textarea onChange={(e) => setBio(e.target.value)} value={bio} placeholder='your bio' required></textarea>
-          <button type='submit'>保存</button>
+          <input
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            type="text"
+            placeholder='名稱'
+            required
+          />
+          <textarea
+            onChange={(e) => setBio(e.target.value)}
+            value={bio}
+            placeholder='個人簡介'
+            required
+          ></textarea>
+          <button type='submit'>Save</button>
         </form>
-        <img className='profile-pic' src={image ? URL.createObjectURL(image) : preImage ? preImage : assets.logo_icon} alt="" />
+        <img
+          className='profile-pic'
+          src={image ? URL.createObjectURL(image) : preImage || assets.logo_icon}
+          alt="頭像預覽"
+        />
       </div>
     </div>
   )

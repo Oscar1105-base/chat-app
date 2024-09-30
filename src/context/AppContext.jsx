@@ -1,6 +1,6 @@
 import { doc, getDoc, onSnapshot, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { createContext, useEffect, useState, useCallback, useMemo } from "react";
-import { logout,auth, db } from "../config/firebase";
+import { logout, auth, db } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify'
 
@@ -16,27 +16,32 @@ const AppContextProvider = (props) => {
     const [chatUser, setChatUser] = useState(null);
     const [chatVisible, setChatVisible] = useState(false);
 
-    // 使用 useMemo 緩存 userRef
-    const userRef = useMemo(() => {
-        return userData ? doc(db, 'users', userData.id) : null;
-    }, [userData]);
 
     const loadUserData = useCallback(async (uid) => {
         try {
             const userRef = doc(db, 'users', uid);
             const userSnap = await getDoc(userRef);
+
+            if (!userSnap.exists()) {
+                console.log("Unknown User");
+                navigate('/profile');
+                return;
+            }
+
             const userData = userSnap.data();
             setUserData(userData);
 
-            if (userData.avatar && userData.name) {
-                navigate('/chat');
-            } else {
+            if (!userData.avatar || !userData.name) {
+                toast.error("Incomplete Profile");
                 navigate('/profile');
+                return;
+            } else {
+                toast.success("Create Success!");
+                navigate('/chat');
             }
 
             await updateDoc(userRef, { lastSeen: Date.now() });
 
-            // 使用 RAF 替代 setInterval 固定 60s 更新 lastSeen
             let rafId;
             const updateLastSeen = async () => {
                 if (auth.currentUser) {
@@ -48,10 +53,12 @@ const AppContextProvider = (props) => {
             };
             updateLastSeen();
 
-            // 清理函數
             return () => cancelAnimationFrame(rafId);
+
         } catch (error) {
-            console.error("Error loading user data:", error);
+            console.error("Failed loading:", error);
+            toast.error("Failed loading");
+            navigate('/');  // 出錯時重定向到首頁或登錄頁
         }
     }, [navigate]);
 

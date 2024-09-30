@@ -26,13 +26,13 @@ npm install
 
 React Router + Toastify  
 ```
-npm install react-router-dom react-toastify firebase
+npm install react-router-dom react-toastify
 ```
 
 
 Firebase
 ```
-npm install react-router-dom react-toastify firebase
+npm install firebase
 ```
 
 

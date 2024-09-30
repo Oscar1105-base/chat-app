@@ -58,11 +58,11 @@ npm run dev
 > 首次註冊需輸入ID/信箱/密碼，進入後添加暱稱/簡介/頭像後完成
 
 <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-  <img src="/Demo/ChatLogin.png" alt="登錄" style="width: 45%;">
+  <img src="/Demo/ChatLogin.png" alt="登錄" style="width: 90%;">
 </div>
 
 <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-  <img src="/Demo/Profile.png" alt="個人簡介" style="width: 45%;">
+  <img src="/Demo/Profile.png" alt="個人簡介" style="width: 90%;">
 </div>
 
 暱稱/簡介可以繼承ID與預設字串，頭像無匿名功能
@@ -70,7 +70,7 @@ npm run dev
 ### 聊天室
 可上傳文/圖 ，支援 png , jpg , jpeg
 <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-  <img src="/sample.png" alt="聊天室" style="width: 90%;">
+  <img src="/sample.png" alt="聊天室" style="width: 40%;">
 </div>
 
 > 左選單為收尋功能與用戶列表及小選單(更新簡介)

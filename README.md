@@ -34,7 +34,9 @@ Firebase
 ```
 npm install firebase
 ```
-將firebase 專案設定的SDK複製到 src/config/firebase.js firebaseConfig 裡：
+
+
+### Firebase專案設定的SDK複製到 src/config/firebase.js：
 ```
 const firebaseConfig = {    
     apiKey: "apiKey",
@@ -45,7 +47,7 @@ const firebaseConfig = {
     appId: "appId"
   };
 ```
-開啟本地伺服器
+### 開啟本地伺服器
 ```
 npm run dev
 ```

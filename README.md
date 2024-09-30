@@ -82,7 +82,6 @@ npm run dev
 
 ## 窄版或手機版面的登出在副選單三個點(⋮)那邊
 
-可上傳文/圖 ，支援 png , jpg , jpeg
 <div style="display: flex; justify-content: center; margin-bottom: 20px;">
   <img src="/Demo/logout.png" alt="登出" style="width: 40%;">
 </div>

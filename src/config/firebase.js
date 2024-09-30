@@ -3,9 +3,14 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, si
 import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
-
+ // your Firebase API Key
 const firebaseConfig = {    
-    // your Firebase API
+    apiKey: "apiKey",
+    authDomain: "authDomain",
+    projectId: "projectId",
+    storageBucket: "storageBucket",
+    messagingSenderId: "messagingSenderId",
+    appId: "appId"
   };
   
 

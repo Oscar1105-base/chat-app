@@ -3,6 +3,7 @@ import { createContext, useEffect, useState, useCallback } from "react";
 import { logout, auth, db } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify'
+import PropTypes from 'prop-types';
 
 
 export const AppContext = createContext();
@@ -130,7 +131,7 @@ const AppContextProvider = (props) => {
         } catch (error) {
             toast.error("Logout failed: " + error.message);
         }
-    }, [navigate]);
+    }, []);
 
     // 新增一個函數來切換 chatUser
     const toggleChatUser = useCallback(() => {
@@ -156,6 +157,10 @@ const AppContextProvider = (props) => {
         </AppContext.Provider>
     );
 
+};
+
+AppContextProvider.propTypes = {
+    children: PropTypes.node.isRequired,  // 對 children 進行類型驗證
 };
 
 export default AppContextProvider;

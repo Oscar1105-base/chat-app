@@ -8,7 +8,7 @@ export const upload = async (file) => {
     const uploadTask = uploadBytesResumable(storageRef, file);
 
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
 
         uploadTask.on('state_changed',
             (snapshot) => {
@@ -24,7 +24,7 @@ export const upload = async (file) => {
                         break;
                 }
             },
-            (error) => {
+            () => {
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {

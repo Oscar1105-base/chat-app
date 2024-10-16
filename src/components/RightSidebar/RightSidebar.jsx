@@ -3,7 +3,6 @@ import './RightSidebar.css'
 import assets from '../../assets/assets'
 import { db } from '../../config/firebase'
 import { AppContext } from '../../context/AppContext'
-import { toast } from 'react-toastify'
 import { collection, query, where, getDocs } from 'firebase/firestore'
 
 const RightSidebar = () => {
@@ -33,7 +32,6 @@ const RightSidebar = () => {
             setMsgImages(images);
         } catch (error) {
             console.error("Error fetching user images:", error);
-            toast.error("無法載入圖片");
         }
     }, []);
 

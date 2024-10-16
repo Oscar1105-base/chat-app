@@ -1,4 +1,4 @@
-// React 17以後不須導入React本體就可以使用React
+// React 17以後不需導入React本體就可以使用React
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'

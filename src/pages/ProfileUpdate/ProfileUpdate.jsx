@@ -39,7 +39,6 @@ const ProfileUpdate = () => {
           updateData.avatar = imgUrl;
         } catch (uploadError) {
           console.error("圖片上傳失敗:", uploadError);
-          toast.error("圖片上傳失敗，請重試");
           return;
         }
       }
@@ -52,7 +51,6 @@ const ProfileUpdate = () => {
       navigate('/chat');
     } catch (error) {
       console.error("更新個人資料時出錯:", error);
-      toast.error("更新失敗，請重試");
     }
   }
 
@@ -70,11 +68,9 @@ const ProfileUpdate = () => {
             setPreImage(userData.avatar || "");
           } else {
             console.log("No such document!");
-            toast.error("無法獲取用戶資料");
           }
         } catch (error) {
           console.error("獲取用戶資料時出錯:", error);
-          toast.error("載入用戶資料失敗");
         }
       } else {
         navigate('/');

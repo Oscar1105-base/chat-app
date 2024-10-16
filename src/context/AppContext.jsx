@@ -33,7 +33,6 @@ const AppContextProvider = (props) => {
             setUserData(userData);
 
             if (!userData.avatar || !userData.name) {
-                toast.error("Incomplete Profile");
                 navigate('/profile');
                 return;
             } else {

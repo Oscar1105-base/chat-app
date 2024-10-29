@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
-
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
     apiKey: "apiKey",
@@ -13,11 +13,13 @@ const firebaseConfig = {
     appId: "appId"
   };
   
+  
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const storage = getStorage(app);
 
 export const signup = async (username, email, password) => {
     try {
@@ -50,12 +52,26 @@ export const login = async (email, password) => {
         const res = await signInWithEmailAndPassword(auth, email, password);
         return res.user;
     } catch (error) {
-        console.error(error);
-        toast.error(error.message.match(/\/([^)]+)\)/)[1].replace(/-/g, " "));
+        console.error("Login error:", error);
+        let errorMessage = "登入失敗";
+        
+        switch (error.code) {
+            case 'auth/invalid-credential':
+                errorMessage = "電子郵件或密碼錯誤";
+                break;
+            case 'auth/user-not-found':
+                errorMessage = "找不到此用戶";
+                break;
+            case 'auth/too-many-requests':
+                errorMessage = "登入嘗試次數過多，請稍後再試";
+                break;
+            default:
+                errorMessage = error.message;
+        }
+        
+        toast.error(errorMessage);
         throw error;
     }
-
-
 };
 
 export const logout = async () => {
